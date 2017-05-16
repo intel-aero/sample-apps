@@ -56,9 +56,10 @@ void transfer(struct spidev *dev, struct transfer *tr)
 		return;
 	}
 
+	memset(&iotr, 0, sizeof(iotr));
 	memcpy(tx, &tr->data, tr->len);
 	memset(&tx[tr->len], 0x00, len - tr->len);
-	memset(rx, 0xff, len);
+	memset(rx, 0x00, len);
 
 	printf("TX: ");
 	for (i = 0; i < len; i++)
