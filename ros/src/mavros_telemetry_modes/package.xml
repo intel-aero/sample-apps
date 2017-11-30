@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+<name>mavros_telemetry_modes</name>
+<version>0.0.0</version>
+<description>The mavros_telemetry_modes package</description>
+
+<maintainer email="padmashree.mandri@intel.com">padmashree mandri</maintainer>
+
+<license> BSD 3-Clause </license>
+<buildtool_depend>catkin</buildtool_depend>
+<build_depend>mavros_msgs</build_depend>
+<build_depend>roscpp</build_depend>
+<run_depend>mavros_msgs</run_depend>
+<run_depend>roscpp</run_depend>
+
+</package>
