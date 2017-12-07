@@ -1,8 +1,17 @@
 /**
-* @file mavros_fly_mission_node.cpp
+* @file aero_fly_mission_node.cpp
 * @brief Demonstration of Flying Waypoint missions using MAVROS
+* @author Shakthi Prashanth M <shakthi.prashanth.m@intel.com>
 * @version 0.0.1
 * @date 2017-09-06
+*
+* The example is summarised below:
+* 1. Gets waypoints from the QGroundControl mission plan (passed in command-line).
+* 2. Sends waypoints to the Aero.
+* 3. Sets Aero to MISSION mode. This makes Aero to execute the mission.
+* 4. Exits after the mission is accomplished.
+*
+* Before you run this example, plan your missions in QGroundControl & save them to a file.
 */
 
 #include <geometry_msgs/PoseStamped.h>
@@ -31,7 +40,8 @@ namespace bpt = boost::property_tree;
 
 bool g_is_home_gps_set = false;
 
-void loadFromQGCPlan(const std::string &qgc_plan_file, mavros_msgs::WaypointPush *wp_list)
+// Parses QGroundControl Waypoint plan into MAVROS Waypoint list.
+void getWaypointsFromQGCPlan(const std::string& qgc_plan_file, mavros_msgs::WaypointPush* wp_list)
 {
   try
   {
@@ -49,7 +59,7 @@ void loadFromQGCPlan(const std::string &qgc_plan_file, mavros_msgs::WaypointPush
     // NOTE: Unexpected type while reading values will cause an exception.
     bool first = true;
     // FOREACH mission item in the list
-    for (auto &mi : mission_pt.get_child("mission.items"))
+    for (auto& mi : mission_pt.get_child("mission.items"))
     {
       // See http://docs.ros.org/api/mavros_msgs/html/msg/Waypoint.html
       mavros_msgs::Waypoint wp{};
@@ -62,7 +72,7 @@ void loadFromQGCPlan(const std::string &qgc_plan_file, mavros_msgs::WaypointPush
       first = false;
       // Parameters
       std::vector<double> params;
-      for (auto &p : mi.second.get_child("params"))
+      for (auto& p : mi.second.get_child("params"))
         params.push_back(p.second.get<double>(""));
       wp.param1 = params[0];
       wp.param2 = params[1];
@@ -77,61 +87,61 @@ void loadFromQGCPlan(const std::string &qgc_plan_file, mavros_msgs::WaypointPush
     //////////////////////////////////////////////////////////
     // Parse QGC plan ends
   }
-  catch (std::exception const &e)
+  catch (std::exception const& e)
   {
     ROS_ERROR("%s", e.what());
     throw;
   }
 }
 
-//  Callback that gets called periodically from MAVROS notifying FCU state
-void save_current_state_cb(const mavros_msgs::State::ConstPtr &msg, mavros_msgs::State *pCurrentState)
+//  Callback that gets called periodically from MAVROS notifying Aero FCU state
+void saveCurrentStateCB(const mavros_msgs::State::ConstPtr& msg, mavros_msgs::State* current_state)
 {
-  *pCurrentState = *msg;
+  *current_state = *msg;
 }
 
-// Callback that gets called periodically from MAVROS notifying Global Poistion of FCU
-void set_home_gps_cb(const sensor_msgs::NavSatFixConstPtr &msg, sensor_msgs::NavSatFix *pHomeGps)
+// Callback that gets called periodically from MAVROS notifying Global Poistion of Aero FCU
+void setHomeGpsCB(const sensor_msgs::NavSatFixConstPtr& msg, sensor_msgs::NavSatFix* home_gps)
 {
-  *pHomeGps = *msg;
+  *home_gps = *msg;
   g_is_home_gps_set = true;
-  ROS_INFO("Received Home: %lf, %lf, %lf", pHomeGps->latitude, pHomeGps->longitude, pHomeGps->altitude);
+  ROS_INFO("Received Home: %lf, %lf, %lf", home_gps->latitude, home_gps->longitude, home_gps->altitude);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   if (argc == 1)
   {
-    ROS_ERROR("Usage: rosrun mavros_fly_mission node <QGC waypoint plan>.json");
+    ROS_ERROR("Usage: roslaunch aero_fly_mission aero_fly_mission.launch file:=<Absolute path of QGroundControl plan>");
     return EXIT_FAILURE;
   }
   // Name of this Application node
-  ros::init(argc, argv, "mavros_flymission");
+  ros::init(argc, argv, "aero_flymission");
 
   ros::NodeHandle nh;
 
-  // Used for knowing FCU state, whether Armed ? or current flight mode, etc
+  // Used for knowing Aero FCU state, Arming status, ? or current flight mode, etc
   mavros_msgs::State current_state{};
 
   // FCU state subscription: See
   // http://docs.ros.org/api/mavros_msgs/html/msg/State.html
   ros::Subscriber state_sub =
-      nh.subscribe<mavros_msgs::State>("mavros/state", 10, boost::bind(save_current_state_cb, _1, &current_state));
+      nh.subscribe<mavros_msgs::State>("mavros/state", 10, boost::bind(saveCurrentStateCB, _1, &current_state));
 
   sensor_msgs::NavSatFix home_gps{};
 
   // FCU Home position: See http://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html
   ros::Subscriber home_gps_sub = nh.subscribe<sensor_msgs::NavSatFix>("mavros/global_position/global", 10,
-                                                                      boost::bind(set_home_gps_cb, _1, &home_gps));
+                                                                      boost::bind(setHomeGpsCB, _1, &home_gps));
 
   // See http://docs.ros.org/api/mavros_msgs/html/msg/WaypointList.html
   mavros_msgs::WaypointPush wp_list{};
 
   try
   {
-    loadFromQGCPlan(argv[1], &wp_list);
+    getWaypointsFromQGCPlan(argv[1], &wp_list);
   }
-  catch (std::exception const &e)
+  catch (std::exception const& e)
   {
     // NOTE: QGC waypointplan (JSON) may contain 'params' valueas 'null';
     // in that case we may get execption. Make sure to keep 'params' values to be 0.
@@ -141,7 +151,7 @@ int main(int argc, char **argv)
 
   ros::Rate rate(20.0);
 
-  ROS_INFO("Waiting for FCU Home GPS location to be set...");
+  ROS_INFO("Waiting for Aero FC Home to be set...");
   while (ros::ok() && !g_is_home_gps_set)
   {
     ros::spinOnce();
@@ -201,8 +211,8 @@ int main(int argc, char **argv)
     ros::shutdown();
   }
 
-  // Lets not overload FCU
-  ROS_INFO("Lets pause for 5 secs (to keep FCU at ease...)");
+  // Lets not overload Aero FCU
+  ROS_INFO("Lets pause for 5 secs (to keep Aero at ease...)");
   sleep(5.0);
   ROS_INFO("Resumed. Missions in execution...");
   bool armed = static_cast<int>(current_state.armed);
@@ -218,5 +228,5 @@ int main(int argc, char **argv)
   }
   ROS_INFO("Mission accomplished!");
 
-  return 0;
+  return EXIT_SUCCESS;
 }

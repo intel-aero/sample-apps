@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package>
-<name>mavros_telemetry_simple</name>
+<name>aero_telemetry_simple</name>
 <version>0.0.0</version>
-<description>The mavros_telemetry_simple package</description>
+<description> Demonstration of reading telemetry data of Intel Aero Flight Controller using MAVROS bridge.</description>
 
-<maintainer email="padmashree.mandri@intel.com">padmashree mandri</maintainer>
+<maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>
 
 <license> BSD 3-Clause </license>
 

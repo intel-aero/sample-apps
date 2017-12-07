@@ -1,5 +1,5 @@
 /**
-*@file mavros_telemetry_simple_node.cpp
+*@file aero_telemetry_simple_node.cpp
 *@brief Demonstration of getting telemetry data of FCU using mavros
 *@date 2017-10-24
 */
@@ -143,7 +143,7 @@ void getVelocitySubCb(const geometry_msgs::TwistStampedConstPtr& msg, bool* velo
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "mavros_telemetry");
+  ros::init(argc, argv, "aero_telemetry");
   ros::NodeHandle nh;
   LocalPosition local_obj;
   GlobalPosition global_obj;

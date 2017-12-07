@@ -1,8 +1,16 @@
 /**
- * @file mavros_offboard_ctrl_node.cpp
- * @brief MAVROS Offboard Control example node, written with mavros version 0.21.2, px4 flight
+ * @file aero_offboard_ctrl_node.cpp
+ * @brief Aero Offboard Control example node, written with mavros version 0.21.2, px4 flight
  * stack and tested in Gazebo SITL & jMAVSIM.
  * Original source code: MAVROS OFFBOARD example from: https://dev.px4.io/en/ros/mavros_offboard.html
+ *
+ * This example is summariesed below:
+ * 1. Listens for state of the Aero Flight Controller.
+ * 2. Set offboard setpoint location before changing OFFBOARD (Otherwise mode switch will be rejected)
+ * 3. Switches to OFFBOARD mode.
+ * 4. When Aero Flight Controller goes to OFFBOARD mode, we continue publishing setpoint position with altitude of 2
+ * meters.
+ * 5. We keep receiving Aero FCU state callabck.
  */
 
 #include <ros/ros.h>
@@ -12,13 +20,13 @@
 #include <mavros_msgs/State.h>
 
 // Callback that gets called at a fixed rate reporting FCU state: connection state, armed, mode, etc.
-void print_state_cb(const mavros_msgs::State::ConstPtr& msg, mavros_msgs::State* pState)
+void printStateCB(const mavros_msgs::State::ConstPtr& msg, mavros_msgs::State* state)
 {
-  *pState = *msg;
+  *state = *msg;
 
-  bool connected = pState->connected;
-  bool armed = pState->armed;
-  std::string mode = pState->mode;
+  bool connected = state->connected;
+  bool armed = state->armed;
+  std::string mode = state->mode;
 
   ROS_INFO("******** Received state cb *********");
   ROS_INFO("%sconnected to PX4", connected ? "" : "Not ");
@@ -35,7 +43,7 @@ int main(int argc, char** argv)
   mavros_msgs::State current_state;
 
   ros::Subscriber state_sub =
-      nh.subscribe<mavros_msgs::State>("mavros/state", 10, boost::bind(print_state_cb, _1, &current_state));
+      nh.subscribe<mavros_msgs::State>("mavros/state", 10, boost::bind(printStateCB, _1, &current_state));
   ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>("mavros/setpoint_position/local", 10);
   ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>("mavros/cmd/arming");
   ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>("mavros/set_mode");

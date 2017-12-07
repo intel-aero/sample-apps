@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mavros_takeoff_land)
+project(aero_takeoff_land)
 
 ##Compile as C++ 11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11 -g)
+add_compile_options(-std=c++11)
 
 ##Find catkin macros and libraries
 ##if COMPONENTS list likefind_package(catkin REQUIRED COMPONENTS xyz)
@@ -21,11 +21,11 @@ catkin_package(
 ###########
 
 include_directories(
-${catkin_INCLUDE_DIRS}
-  )
+  ${catkin_INCLUDE_DIRS}
+)
 
 add_executable(${PROJECT_NAME}_node
-  src/mavros_takeoff_land_node.cpp
+  src/aero_takeoff_land_node.cpp
 )
 
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
