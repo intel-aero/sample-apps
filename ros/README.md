@@ -1,83 +1,155 @@
 # Welcome to the Intel Aero ros-examples guide.
 
-This doc guides how to build and run ros-examples using docker.
+This doc guides how to build and run ros-examples.
+## On native ROS
 
-While we demonstrate examples using docker, you can always install ROS Kinetic on **Ubuntu based Intel-Aero** by following instructions [here](http://wiki.ros.org/kinetic/Installation/Ubuntu) and follow only ROS instructions of the guide.
+### Prerequisites
 
-## Building and running ROS Application on  Intel Aero platform
-### Clone and build
+#### Ros
+Install [ROS](http://wiki.ros.org/kinetic/Installation/Ubuntu) pacakges
+
+ Update Packages
+```
+$ sudo apt-get update
+```
+#### Mavros
+Install [MAVROS](http://wiki.ros.org/mavros) packages
+```
+$ sudo apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras
+
+```
+Then install GeographicLib datasets by running the `install_geographiclib_datasets.sh` script:
+```
+$ wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
+$ chmod +x install_geographiclib_datasets.sh
+$ ./install_geographiclib_datasets.sh
+```
+
+#### Catkin
+Install catkin tools
+```
+$ sudo apt-get install python-catkin-tools
+```
+
+### Clone and build ROS-examples
 ```
 $ git clone https://github.intel.com/drones/ros-examples.git
-$ catkin_make
+$ cd ros-examples
+$ catkin build
 ```
-After `catkin_make` build is complete, ROS Node executable is generated in `devel/lib/mavros_offboard_ctrl/node` - this is the application by itself.
-
-### Pull ROS docker in Aero platorm
-Open a **Aero terminal 1** and pull ros packages using docker.
+To add the workspace to your ROS environment you need to source the generated setup file:
 ```
-# docker pull ros
+$ source devel/setup.bash
 ```
 
-### Run ROS in docker container
+
+### Launch Mavros and Run ROS-examples
+MAVROS automatically launches `roscore` which enables communication across ROS nodes.
+```
+$ roslaunch mavros px4.launch fcu_url:="tcp://<Aero-IP>:5760?ids=1,1"
+```
+
+Open another terminal  and run the ROS launch file
+```
+$ roslaunch aero_takeoff_land aero_takeoff_land.launch
+```
+This successfully launches `aero_takeoff_land.launch` launch file, which connects to Aero flight Controller via MAVROS.
+
+## On Docker ROS
+
+### Prerequisites
+
+Open two terminals (docker1 and docker2) and do below steps in **both**.
+
+#### Ros
+Pull ros packages using docker
+```
+$ docker pull ros
+```
+Run ROS in docker container
 ```
 # docker run -it --privileged ros
 ```
 this opens a ROS shell with container-id
 
-### Update packages
+ Update Packages
 ```
-root@1bb62dbedaf0:/# apt-get update
+# apt-get update
 ```
-
-### Install [MAVROS](http://wiki.ros.org/mavros) packages
+#### Mavros
+Install [MAVROS](http://wiki.ros.org/mavros) packages
 ```
-root@1bb62dbedaf0:/# apt install ros-kinetic-mavros
-```
-
-Save your work by committing this container using [docker commit](https://docs.docker.com/engine/reference/commandline/commit/). Open another **Aero terminal 2**.
-```
-# docker commit -m "Demo of ROS App" 1bb62dbedaf0 my_container/ros
+# apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras
 ```
 
-### Launching MAVROS
-MAVROS automatically launches `roscore` which enables communication across ROS nodes.
+Then install GeographicLib datasets by running the `install_geographiclib_datasets.sh` script:
 ```
-roslaunch mavros px4.launch fcu_url:="udp://:14540@<Aero-IP>:14557"
-```
-
-Goto **Aero terminal 1** and run the ROS Application node
-```
-# rosrun mavros_fly_mission node
-```
-This successfully launches ROS Application node (used `mavros_fly_mission` as example) which connects to Aero Flight Controller via MAVROS. Make sure that to add the workspace to your ROS environment you need to source the generated setup file:
-```
-# . ~/ros-examples/devel/setup.bash
+# wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
+# chmod +x install_geographiclib_datasets.sh
+# ./install_geographiclib_datasets.sh
 ```
 
-## Offboard Control:
-* Listens for State of the Aero Flight Controller
-* Provides offboard setpoint's.
-* Sets OFFBOARD mode.
-* When Aero Flight Controller changes to OFFBOARD mode, it detects slow takeoff with altitude of 2 meters.
-* State callabck gets called indicating Aero FC state change.
+### Catkin
+Install catkin tools
+```
+#  apt-get install python-catkin-tools
+```
 
-## Fly mission:
-* Loads the QGC mission plan (passed in command-line)
-* Composes waypoints & sends them to the vehicle
-* Sets Vehicle to MISSION mode. This causes Vehicle to executes the mission.
-* Shuts down after the mission is accomplished
 
-**Before you run** `mavros_fly_mission`:
+## Launching Mavros (In docker1)
+
+### Export proxy settings
+```
+export ROS_IP=<IP of docker1> 
+```
+Ip can be known from `docker network inspect bridge`
+```
+export ROS_MASTER_URI="http://<IP of docker1>:11311"
+```
+
+### Launch Mavros
+```
+# roslaunch mavros px4.launch fcu_url:="tcp://<Aero-IP>:5760?ids=1,1"
+```
+
+## Running ROS-examples (In Docker2)
+
+### Clone and build ROS-examples
+```
+# git clone https://github.intel.com/drones/ros-examples.git
+# cd ros-examples
+# catkin build
+```
+
+To add the workspace to your ROS environment you need to source the generated setup file:
+```
+# source devel/setup.bash
+```
+
+### Export proxy settings
+```
+export ROS_IP=<IP of docker1>
+export ROS_MASTER_URI="http://<IP of docker1>:11311"
+```
+
+### Run ROS application using
+```
+# roslaunch aero_takeoff_land aero_takeoff_land.launch
+```
+
+# Running Other Examples : 
+## Fly mission
+
+**Before you run** `aero_fly_mission`:
 * Plan your missions in [QGC](http://qgroundcontrol.com) & save them to a file.
+Note: `aero_fly_mission` supports only QGC mission plan now.
 
-Note: `mavros_fly_mission` supports only QGC mission plan now. 
-## Validation of Examples
-**Note** *We haven't been able to test on Intel Aero due to the Indoor flight issue we're facing now.
-We're going to test on Intel Aero soon we have stable Indoor flight. As of now we've tested it on Simulator.*
+![Qgc_plan](https://user-images.githubusercontent.com/25497245/33707210-b3366a44-db5c-11e7-9165-18c661f01907.png)
 
-### Test setup
-* PX4 SITL Gazebo multi-robot simulator, version 7.8.1
-* QGC v3.2.4
-* ROS Kinetic
-* MAVROS 0.21.2
+Running `aero_fly_mission` example
+```
+# roslaunch aero_fly_mission aero_fly_mission.launch file:=<absolute path to QGC mission plan>
+```
+
+
 
