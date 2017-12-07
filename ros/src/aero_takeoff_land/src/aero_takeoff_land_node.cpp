@@ -20,7 +20,7 @@
 void getRelativeAltitudeCb(const std_msgs::Float64ConstPtr& msg, std_msgs::Float64* relative_altitude)
 {
   *relative_altitude = *msg;
-  ROS_INFO("altitude:%lf", relative_altitude->data);
+  ROS_INFO("Altitude: [%g]", relative_altitude->data);
 }
 
 // subscribing to mavros/global_position/rel_alt to get altitude updates
@@ -48,18 +48,18 @@ int main(int argc, char** argv)
   const float ALTITUDE = 488.00;
   const float LATITUDE = 47.3977415;
   const float LONGITUDE = 8.5455937;
-  const float MIN_PITCH = 0;
-  const float YAW = 0;
+  const float MIN_PITCH = 0.f;
+  const float YAW = 0.f;
 
   // arming
   ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
   mavros_msgs::CommandBool srv_arm;
   srv_arm.request.value = true;
   if (arming_client.call(srv_arm) && srv_arm.response.success)
-    ROS_INFO("ARM sent %d", srv_arm.response.success);
+    ROS_INFO("Arm sent %d", srv_arm.response.success);
   else
   {
-    ROS_ERROR("Failed arming/disarming");
+    ROS_ERROR("Arming failed, exiting.");
     ros::shutdown();
     return -1;
   }
@@ -73,10 +73,10 @@ int main(int argc, char** argv)
   srv_takeoff.request.min_pitch = MIN_PITCH;
   srv_takeoff.request.yaw = YAW;
   if (takeoff_client.call(srv_takeoff) && srv_takeoff.response.success)
-    ROS_INFO("takeoff sent %d", srv_takeoff.response.success);
+    ROS_INFO("Takeoff sent %d", srv_takeoff.response.success);
   else
   {
-    ROS_ERROR("Takeoff Failed");
+    ROS_ERROR("Takeoff failed, exiting.");
     ros::shutdown();
     return -1;
   }
@@ -86,10 +86,10 @@ int main(int argc, char** argv)
   ros::ServiceClient land_client = nh.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
   mavros_msgs::CommandTOL srv_land{};
   if (land_client.call(srv_land) && srv_land.response.success)
-    ROS_INFO("land sent %d", srv_land.response.success);
+    ROS_INFO("Land sent %d", srv_land.response.success);
   else
   {
-    ROS_ERROR("Landing failed");
+    ROS_ERROR("Landing failed, exiting.");
     ros::shutdown();
     return -1;
   }
