@@ -1,52 +1,56 @@
 /**
-*@file mavros_telemetry_modes_node.cpp
-*@brief Demonstration of getting Flight modes using mavros
+*@file aero_takeoff_land_node.cpp
+*@brief Demonstration of takeoff and land using mavros
 *@date 2017-10-24
 */
 
+#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
 #include <cstdlib>
-#include <ros/ros.h>
-#include <sensor_msgs/NavSatFix.h>
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
-#include <boost/bind.hpp>
+#include <ros/ros.h>
+#include <sensor_msgs/NavSatFix.h>
+#include <std_msgs/Float64.h>
 #include <string.h>
-#include <pthread.h>
-#include <boost/thread/thread.hpp>
 
-// printing flight mode
-void getFlightModeSubCb(const mavros_msgs::StateConstPtr& msg, mavros_msgs::State* flight_mode)
+// printing altitude
+void getRelativeAltitudeCb(const std_msgs::Float64ConstPtr& msg, std_msgs::Float64* relative_altitude)
 {
-  *flight_mode = *msg;
-  ROS_INFO("mode: %s", flight_mode->mode.c_str());
+  *relative_altitude = *msg;
+  ROS_INFO("altitude:%lf", relative_altitude->data);
 }
 
-// subscribing to mavros/state to get flight mode updates
-void watchFlightMode()
+// subscribing to mavros/global_position/rel_alt to get altitude updates
+void watchFlightAltitude()
 {
-  mavros_msgs::State flight_mode;
+  std_msgs::Float64 relative_altitude;
   ros::NodeHandlePtr node = boost::make_shared<ros::NodeHandle>();
-  ros::Subscriber flight_mode_sub =
-      node->subscribe<mavros_msgs::State>("mavros/state", 3, boost::bind(getFlightModeSubCb, _1, &flight_mode));
+  ros::Subscriber relative_pos_sub = node->subscribe<std_msgs::Float64>(
+      "mavros/global_position/rel_alt", 1, boost::bind(getRelativeAltitudeCb, _1, &relative_altitude));
+  ros::Rate rate(1);
   while (ros::ok())
   {
     ros::spinOnce();
+    rate.sleep();
   }
 }
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "mavros_takeoff");
+  ros::init(argc, argv, "aero_takeoff_land");
   ros::NodeHandle nh;
-  boost::thread thread_mode(watchFlightMode);
 
-  const float ALTITUDE = 500;
+  // Thread that watch for change in altitude of Aero.
+  boost::thread thread_altitude(watchFlightAltitude);
+  const float ALTITUDE = 488.00;
   const float LATITUDE = 47.3977415;
   const float LONGITUDE = 8.5455937;
   const float MIN_PITCH = 0;
   const float YAW = 0;
+
   // arming
   ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
   mavros_msgs::CommandBool srv_arm;
@@ -69,15 +73,14 @@ int main(int argc, char** argv)
   srv_takeoff.request.min_pitch = MIN_PITCH;
   srv_takeoff.request.yaw = YAW;
   if (takeoff_client.call(srv_takeoff) && srv_takeoff.response.success)
-    ROS_INFO("TAKEOFF sent %d", srv_takeoff.response.success);
+    ROS_INFO("takeoff sent %d", srv_takeoff.response.success);
   else
   {
-    ROS_ERROR("Failed Takeoff");
+    ROS_ERROR("Takeoff Failed");
     ros::shutdown();
     return -1;
   }
-
-  sleep(10);
+  sleep(5);  // Let Aero reach takeoff altitude
 
   // land
   ros::ServiceClient land_client = nh.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
@@ -86,13 +89,14 @@ int main(int argc, char** argv)
     ROS_INFO("land sent %d", srv_land.response.success);
   else
   {
-    ROS_ERROR("Failed Land");
+    ROS_ERROR("Landing failed");
     ros::shutdown();
     return -1;
   }
 
-  sleep(5);
+  sleep(5);  // Let Aero land..
   ROS_INFO("Done");
   ros::shutdown();
+
   return 0;
 }

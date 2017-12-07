@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mavros_telemetry_simple)
+project(aero_flight_modes)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11 -g)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -25,7 +25,7 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME}_node
-  src/mavros_telemetry_simple_node.cpp
+  src/aero_flight_modes_node.cpp
 )
 
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
@@ -37,7 +37,7 @@ add_dependencies(${PROJECT_NAME}_node
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
-${catkin_LIBRARIES}
+  ${catkin_LIBRARIES}
 )
 
 #############

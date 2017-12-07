@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package>
-<name>mavros_telemetry_modes</name>
+<name>aero_flight_modes</name>
 <version>0.0.0</version>
-<description>The mavros_telemetry_modes package</description>
+<description>  Demonstration of flight modes of Intel Aero using mavros bridge.</description>
 
-<maintainer email="padmashree.mandri@intel.com">padmashree mandri</maintainer>
+<maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>
 
 <license> BSD 3-Clause </license>
 <buildtool_depend>catkin</buildtool_depend>
