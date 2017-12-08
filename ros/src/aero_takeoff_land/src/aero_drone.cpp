@@ -21,7 +21,7 @@ bool AeroDrone::arm()
 {
   if (!is_home_gps_set_)
   {
-    ROS_ERROR("Fatal: Can't arm: No GPS Fix!");
+    ROS_ERROR("Can't arm: No GPS Fix!");
     return false;
   }
 
@@ -32,7 +32,7 @@ bool AeroDrone::arm()
     ROS_DEBUG("Arm sent");
   else
   {
-    ROS_ERROR("Arming failed, exiting.");
+    ROS_ERROR("Fatal: Arming failed!");
     ros::shutdown();
     return false;
   }
@@ -43,7 +43,7 @@ bool AeroDrone::takeoff()
 {
   if (!is_home_gps_set_)
   {
-    ROS_ERROR("Fatal: Can't takeoff: No GPS Fix!");
+    ROS_ERROR("Can't takeoff: No GPS Fix!");
     return false;
   }
 
@@ -61,7 +61,7 @@ bool AeroDrone::takeoff()
     ROS_INFO("Takeoff sent");
   else
   {
-    ROS_ERROR("Takeoff failed, exiting.");
+    ROS_ERROR("Fatal: Takeoff failed!");
     ros::shutdown();
     return false;
   }
@@ -72,7 +72,7 @@ bool AeroDrone::land()
 {
   if (!is_home_gps_set_)
   {
-    ROS_ERROR("Fatal: Can't takeoff: No GPS Fix!");
+    ROS_ERROR("Can't land: No GPS Fix!");
     return false;
   }
 
@@ -83,7 +83,7 @@ bool AeroDrone::land()
     ROS_INFO("Land sent");
   else
   {
-    ROS_ERROR("Landing failed, exiting.");
+    ROS_ERROR("Fatal: Landing failed!");
     ros::shutdown();
     return false;
   }
@@ -121,7 +121,7 @@ void AeroDrone::setHomeGpsCB(const sensor_msgs::NavSatFixConstPtr& msg)
 void AeroDrone::getRelativeAltitudeCB(const std_msgs::Float64ConstPtr& msg, std_msgs::Float64* relative_altitude)
 {
   *relative_altitude = *msg;
-  ROS_INFO("Altitude: [%g]", relative_altitude->data);
+  ROS_INFO("Altitude: [%gm]", relative_altitude->data);
 }
 
 // subscribing to mavros/global_position/rel_alt to get altitude updates
