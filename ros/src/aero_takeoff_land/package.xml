@@ -4,6 +4,7 @@
 <version>0.0.0</version>
 <description> Demonstration of takeoff and land on Intel Aero using MAVROS bridge.</description>
 
+<maintainer email="shakthi.prashanth.m@intel.com">Shakthi Prashanth M</maintainer>
 <maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>
 
 <license> BSD 3-Clause </license>
