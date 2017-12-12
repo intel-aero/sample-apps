@@ -49,7 +49,7 @@ bool AeroDrone::takeoff()
   srv_takeoff.request.latitude = home_.geo.latitude;
   srv_takeoff.request.longitude = home_.geo.longitude;
 
-  // Thread that watch for change in altitude of Aero.
+  // Thread that watch for change in Aero flight mode changes.
   thread_watch_flight_mode_ = new boost::thread(boost::bind(&AeroDrone::watchFlightModeThread, this));
 
   if (takeoff_client.call(srv_takeoff) && srv_takeoff.response.success)
