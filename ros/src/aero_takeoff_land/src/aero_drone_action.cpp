@@ -1,5 +1,5 @@
 
-#include "aero_drone.h"
+#include "aero_drone_action.h"
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
@@ -29,14 +29,9 @@ bool AeroDrone::arm()
   mavros_msgs::CommandBool srv_arm;
   srv_arm.request.value = true;
   if (arming_client.call(srv_arm) && srv_arm.response.success)
-    ROS_DEBUG("Arm sent");
+    return true;
   else
-  {
-    ROS_ERROR("Fatal: Arming failed!");
-    ros::shutdown();
     return false;
-  }
-  return true;
 }
 
 bool AeroDrone::takeoff()
@@ -58,14 +53,9 @@ bool AeroDrone::takeoff()
   thread_watch_alt_ = new boost::thread(boost::bind(&AeroDrone::watchAltitudeThread, this));
 
   if (takeoff_client.call(srv_takeoff) && srv_takeoff.response.success)
-    ROS_INFO("Takeoff sent");
+    return true;
   else
-  {
-    ROS_ERROR("Fatal: Takeoff failed!");
-    ros::shutdown();
     return false;
-  }
-  return true;
 }
 
 bool AeroDrone::land()
@@ -80,14 +70,9 @@ bool AeroDrone::land()
   mavros_msgs::CommandTOL srv_land{};
 
   if (land_client.call(srv_land) && srv_land.response.success)
-    ROS_INFO("Land sent");
+    return true;
   else
-  {
-    ROS_ERROR("Fatal: Landing failed!");
-    ros::shutdown();
     return false;
-  }
-  return true;
 }
 
 void AeroDrone::resetHome()

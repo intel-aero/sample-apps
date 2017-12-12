@@ -1,5 +1,5 @@
-#ifndef __AERO_DRONE_H__
-#define __AERO_DRONE_H__
+#ifndef __AERO_DRONE_ACTION_H__
+#define __AERO_DRONE_ACTION_H__
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>

@@ -22,10 +22,12 @@ catkin_package(
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  INCLUDE_DIRECTORIES include
 )
 
 add_executable(${PROJECT_NAME}_node
   src/aero_telemetry_simple_node.cpp
+  src/aero_drone_telemetry.cpp
 )
 
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")

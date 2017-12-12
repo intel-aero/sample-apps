@@ -1,5 +1,3 @@
 <launch>
-
 <node pkg="aero_takeoff_land" name="aero_takeoff_land" output="screen" type="node"/>
-
 </launch>
