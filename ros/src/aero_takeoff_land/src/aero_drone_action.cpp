@@ -9,7 +9,7 @@
 AeroDrone::AeroDrone()
 {
   resetHome();
-  getHomeGps();
+  getHomeGeoPoint();
 }
 
 AeroDrone::~AeroDrone()
@@ -19,7 +19,7 @@ AeroDrone::~AeroDrone()
 
 bool AeroDrone::arm()
 {
-  if (!is_home_gps_set_)
+  if (!home_set_)
   {
     ROS_ERROR("Can't arm: No GPS Fix!");
     return false;
@@ -36,7 +36,7 @@ bool AeroDrone::arm()
 
 bool AeroDrone::takeoff()
 {
-  if (!is_home_gps_set_)
+  if (!home_set_)
   {
     ROS_ERROR("Can't takeoff: No GPS Fix!");
     return false;
@@ -45,9 +45,9 @@ bool AeroDrone::takeoff()
   auto takeoff_client = nh_.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
   mavros_msgs::CommandTOL srv_takeoff{};
 
-  srv_takeoff.request.altitude = home_gps_.altitude;
-  srv_takeoff.request.latitude = home_gps_.latitude;
-  srv_takeoff.request.longitude = home_gps_.longitude;
+  srv_takeoff.request.altitude = home_.geo.altitude;
+  srv_takeoff.request.latitude = home_.geo.latitude;
+  srv_takeoff.request.longitude = home_.geo.longitude;
 
   // Thread that watch for change in altitude of Aero.
   thread_watch_alt_ = new boost::thread(boost::bind(&AeroDrone::watchAltitudeThread, this));
@@ -60,7 +60,7 @@ bool AeroDrone::takeoff()
 
 bool AeroDrone::land()
 {
-  if (!is_home_gps_set_)
+  if (!home_set_)
   {
     ROS_ERROR("Can't land: No GPS Fix!");
     return false;
@@ -77,17 +77,17 @@ bool AeroDrone::land()
 
 void AeroDrone::resetHome()
 {
-  home_gps_.latitude = home_gps_.longitude = home_gps_.altitude = NAN;
+  home_.geo.latitude = home_.geo.longitude = home_.geo.altitude = NAN;
 }
 
-void AeroDrone::getHomeGps()
+void AeroDrone::getHomeGeoPoint()
 {
   // FCU Home position: See http://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html
-  auto home_gps_sub = nh_.subscribe<sensor_msgs::NavSatFix>("mavros/global_position/global", 1,
-                                                            boost::bind(&AeroDrone::setHomeGpsCB, this, _1));
+  auto home_sub = nh_.subscribe<mavros_msgs::HomePosition>("mavros/home_position/home", 1,
+                                                           boost::bind(&AeroDrone::setHomeGeoPointCB, this, _1));
 
   ROS_INFO("Waiting for Aero FC Home to be set...");
-  while (ros::ok() && !is_home_gps_set_)
+  while (ros::ok() && !home_set_)
   {
     ros::spinOnce();
     rate_.sleep();
@@ -95,11 +95,11 @@ void AeroDrone::getHomeGps()
 }
 
 // Callback that gets called periodically from MAVROS notifying Global Poistion of Aero FCU
-void AeroDrone::setHomeGpsCB(const sensor_msgs::NavSatFixConstPtr& msg)
+void AeroDrone::setHomeGeoPointCB(const mavros_msgs::HomePositionConstPtr& home)
 {
-  home_gps_ = *msg;
-  is_home_gps_set_ = true;
-  ROS_INFO("Received Home: %lf, %lf, %lf", home_gps_.latitude, home_gps_.longitude, home_gps_.altitude);
+  home_ = *home;
+  home_set_ = true;
+  ROS_INFO("Received Home (WGS84 datum): %lf, %lf, %lf", home_.geo.latitude, home_.geo.longitude, home_.geo.altitude);
 }
 
 // printing altitude
