@@ -4,7 +4,7 @@
 <version>0.0.0</version>
 <description>  Demonstration of flight modes of Intel Aero using mavros bridge.</description>
 
-<maintainer email="shakthi.prashanth@intel.com">Shakthi Prashanth M</maintainer>
+<maintainer email="shakthi.prashanth.m@intel.com">Shakthi Prashanth M</maintainer>
 <maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>
 
 <license> BSD 3-Clause </license>
