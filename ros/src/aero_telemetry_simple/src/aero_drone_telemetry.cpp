@@ -9,11 +9,15 @@
 #include <ros/ros.h>
 #include <cmath>
 
-void setHomePositionCB(const mavros_msgs::HomePositionConstPtr& home);
-void setGPSFixCB(const sensor_msgs::NavSatFixConstPtr& gps_fix);
-void setGPSRelativeAltCB(const std_msgs::Float64ConstPtr& rel_alt);
-void setLandedStateCB(const mavros_msgs::ExtendedStateConstPtr& landed_state);
-void setBatteryStateCB(const sensor_msgs::BatteryStateConstPtr& battery_state);
+AeroDrone::AeroDrone()
+{
+  thread_telemetry_ = new boost::thread(boost::bind(&AeroDrone::fetchTelemetryThread, this));
+}
+
+AeroDrone::~AeroDrone()
+{
+  delete thread_telemetry_;
+}
 
 void AeroDrone::fetchTelemetryThread()
 {
@@ -39,16 +43,6 @@ void AeroDrone::fetchTelemetryThread()
     ros::spinOnce();
     rate_.sleep();
   }
-}
-
-AeroDrone::AeroDrone()
-{
-  thread_telemetry_ = new boost::thread(boost::bind(&AeroDrone::fetchTelemetryThread, this));
-}
-
-AeroDrone::~AeroDrone()
-{
-  delete thread_telemetry_;
 }
 
 float AeroDrone::absoluteAltitude()
