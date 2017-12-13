@@ -2,3 +2,9 @@ build
 devel
 logs
 .vscode
+.catkin_tools
+# from Qt project
+*.creator.*
+*.files
+*.includes
+

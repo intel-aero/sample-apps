@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
 <name>aero_takeoff_land</name>
-<version>0.0.0</version>
-<description> Demonstration of takeoff and land on Intel Aero using MAVROS bridge.</description>
+<version>0.1.0</version>
+<description> Demonstration of takeoff and land on Intel Aero using MAVROS bridge. </description>
 
 <maintainer email="shakthi.prashanth.m@intel.com">Shakthi Prashanth M</maintainer>
 <maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>

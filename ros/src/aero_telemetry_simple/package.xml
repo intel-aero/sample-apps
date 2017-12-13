@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
 <name>aero_telemetry_simple</name>
-<version>0.0.0</version>
-<description> Demonstration of reading telemetry data of Intel Aero Flight Controller using MAVROS bridge.</description>
+<version>0.1.0</version>
+<description> Demonstration of reading Telemetry info of Intel Aero Flight Controller using MAVROS bridge.</description>
 
 <maintainer email="shakthi.prashanth.m@intel.com">Shakthi Prashanth M</maintainer>
 <maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>

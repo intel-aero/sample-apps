@@ -1,5 +1,5 @@
-#ifndef __AERO_DRONE_ACTION_H__
-#define __AERO_DRONE_ACTION_H__
+
+#pragma once
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
@@ -32,5 +32,3 @@ private:
   ros::Rate rate_ = ros::Rate(20.0);
   boost::thread* thread_watch_alt_ = nullptr;  // for watching drone's altitude
 };
-
-#endif
