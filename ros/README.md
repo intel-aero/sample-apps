@@ -1,6 +1,6 @@
-# Welcome to the Intel Aero ros-examples guide.
+# Welcome to the Intel Aero ROS-examples guide.
 
-This doc guides how to build and run ros-examples.
+This doc guides how to Build and Run ROS-examples on Intel Aero.
 ## On Ubuntu-based Intel Aero
 
 ### Prerequisites
