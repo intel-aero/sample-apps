@@ -1,7 +1,7 @@
 # Welcome to the Intel Aero ros-examples guide.
 
 This doc guides how to build and run ros-examples.
-## On Ubuntu
+## On Ubuntu-based Intel Aero
 
 ### Prerequisites
 
@@ -55,7 +55,7 @@ $ roslaunch aero_takeoff_land aero_takeoff_land.launch
 ```
 This successfully launches `aero_takeoff_land.launch` launch file, which connects to Aero flight Controller via MAVROS.
 
-## On Docker
+## On Docker (Applies to both Ubuntu and Yocto based Intel Aero)
 
 ### Prerequisites
 
