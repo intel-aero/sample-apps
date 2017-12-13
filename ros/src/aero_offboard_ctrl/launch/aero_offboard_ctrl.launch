@@ -1,0 +1,5 @@
+<launch>
+
+ <node pkg="aero_offboard_ctrl" name="aero_offboard_ctrl" output="screen" type="node"/>
+
+</launch>

@@ -1,0 +1,3 @@
+<launch>
+<node pkg="aero_telemetry_simple" name="aero_telemetry_simple" output="screen" type="node"/>
+</launch>

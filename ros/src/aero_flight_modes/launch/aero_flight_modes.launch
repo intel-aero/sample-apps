@@ -1,0 +1,3 @@
+<launch>
+ <node pkg="aero_flight_modes" name="aero_flight_modes" output="screen" type="node"/>
+</launch>
