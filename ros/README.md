@@ -49,7 +49,7 @@ MAVROS automatically launches `roscore` which enables communication across ROS n
 $ roslaunch mavros px4.launch fcu_url:="tcp://<Aero-IP>:5760?ids=1,1"
 ```
 
-Open another terminal  and run the ROS launch file
+Open another terminal  and Run `aero_takeoff_land` example as below
 ```
 $ roslaunch aero_takeoff_land aero_takeoff_land.launch
 ```
