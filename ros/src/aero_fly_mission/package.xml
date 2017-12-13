@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>aero_fly_mission</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>  Demonstration of Flying missions of Intel Aero using MAVROS.</description>
   <maintainer email="shakthi.prashanth.m@intel.com">Shakthi Prashanth M</maintainer>
   <license>BSD 3-Clause</license>

@@ -1,5 +1,5 @@
-#ifndef __AERO_DRONE_H__
-#define __AERO_DRONE_H__
+
+#pragma once
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
@@ -47,20 +47,9 @@ private:
   std::mutex mutex_{};
   boost::thread* thread_telemetry_ = nullptr;  // for watching drone's altitude
 
-  enum class LandedState
-  {
-    UNDEFINED,
-    ON_GROUND,
-    IN_AIR,
-    TAKEOFF,
-    LANDING
-  };
-
   mavros_msgs::HomePosition home_pos_{};
   sensor_msgs::NavSatFix gps_fix_{};
   mavros_msgs::Altitude altitude{};
   mavros_msgs::ExtendedState extended_state_{};
   sensor_msgs::BatteryState battery_state_{};
 };
-
-#endif

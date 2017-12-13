@@ -4,9 +4,7 @@
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
-#include <mavros_msgs/Altitude.h>
 #include <sensor_msgs/NavSatStatus.h>
-#include <ros/ros.h>
 #include <cmath>
 
 AeroDrone::AeroDrone()
