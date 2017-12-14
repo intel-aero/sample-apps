@@ -1,22 +1,15 @@
 # Welcome to the Intel Aero ROS-examples guide.
 
-This doc guides how to Build and Run ROS-examples on Intel Aero.
+This doc guides how to build, run and create debian packages of ROS-examples on Intel Aero.
 ## On Ubuntu-based Intel Aero
 
 ### Prerequisites
-
 #### ROS
-Install [ROS](http://wiki.ros.org/kinetic/Installation/Ubuntu) pacakges
-
- Update Packages
-```
-$ sudo apt-get update
-```
-#### Mavros
-Install [MAVROS](http://wiki.ros.org/mavros) packages
+Install ROS-Kinetic by following instructions [here](http://wiki.ros.org/kinetic/Installation/Ubuntu).
+#### MAVROS
+Install [MAVROS](http://wiki.ros.org/mavros) packages as below.
 ```
 $ sudo apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras
-
 ```
 Then install GeographicLib datasets by running the `install_geographiclib_datasets.sh` script:
 ```
@@ -24,17 +17,16 @@ $ wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/in
 $ chmod +x install_geographiclib_datasets.sh
 $ ./install_geographiclib_datasets.sh
 ```
-
-#### Catkin
-Install catkin tools
+#### Catkin tools
+Install catkin tools:
 ```
 $ sudo apt-get install python-catkin-tools
 ```
 
 ### Clone and Build ROS-examples
 ```
-$ git clone https://github.intel.com/drones/ros-examples.git
-$ cd ros-examples
+$ git clone https://github.com/intel-aero/sample-apps
+$ cd ros
 $ catkin build
 ```
 To add the workspace to your ROS environment you need to source the generated setup file:
@@ -42,108 +34,93 @@ To add the workspace to your ROS environment you need to source the generated se
 $ source devel/setup.bash
 ```
 
-
 ### Launch MAVROS and Run ROS-examples
 MAVROS automatically launches `roscore` which enables communication across ROS nodes.
 ```
 $ roslaunch mavros px4.launch fcu_url:="tcp://<Aero-IP>:5760?ids=1,1"
 ```
-
-Open another terminal  and Run `aero_takeoff_land` example as below
+Open another terminal and Run `aero_takeoff_land` example as below:
 ```
 $ roslaunch aero_takeoff_land aero_takeoff_land.launch
 ```
-This successfully launches `aero_takeoff_land.launch` launch file, which connects to Aero flight Controller via MAVROS.
+This successfully launches `aero_takeoff_land.launch`, which connects to Aero flight controller via MAVROS.
+
 
 ## On Docker (Applies to both Ubuntu and Yocto based Intel Aero)
-
 ### Prerequisites
-
-Open two terminals (docker1 and docker2) and do below steps in **both**.
-
+Open two terminals (*container-1* and *container-2*) and do below steps in **both**.
 #### ROS
-Pull ROS packages using docker
+Pull ROS packages using docker.
 ```
 $ docker pull ros
 ```
-Run ROS in docker container
+Run ROS in docker container, this opens a ROS shell with container-id.
 ```
 # docker run -it --privileged ros
 ```
-this opens a ROS shell with container-id
-
-Update Packages
+Update packages.
 ```
 # apt-get update
 ```
-#### Mavros
-Install [MAVROS](http://wiki.ros.org/mavros) packages
+#### MAVROS
+Install [MAVROS](http://wiki.ros.org/mavros) packages as below:
 ```
 # apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras
 ```
-
 Then install GeographicLib datasets by running the `install_geographiclib_datasets.sh` script:
 ```
 # wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
 # chmod +x install_geographiclib_datasets.sh
 # ./install_geographiclib_datasets.sh
 ```
-
-### Catkin
+#### Catkin tools
 Install catkin tools
 ```
 #  apt-get install python-catkin-tools
 ```
 
-
-## Launching MAVROS (In docker1)
-
-### Export proxy settings
+### Launching MAVROS (In container-1)
+#### Export proxy settings
 ```
-export ROS_IP=<IP of docker1> 
+export ROS_IP=<IP of container-1> 
 ```
-Ip can be known from `docker network inspect bridge`
+Docker container IP can be known from `docker network inspect bridge`
 ```
-export ROS_MASTER_URI="http://<IP of docker1>:11311"
+export ROS_MASTER_URI="http://<IP of container-1>:11311"
 ```
-
-### Launch Mavros
+#### Launch MAVROS
 ```
 # roslaunch mavros px4.launch fcu_url:="tcp://<Aero-IP>:5760?ids=1,1"
 ```
 
-## Running ROS-examples (In Docker2)
-
-### Clone and Build ROS-examples
+### Running ROS-examples (In container-2)
+#### Clone and Build ROS-examples
 ```
-# git clone https://github.intel.com/drones/ros-examples.git
-# cd ros-examples
+# git clone https://github.com/intel-aero/sample-apps
+# cd ros
 # catkin build
 ```
-
 To add the workspace to your ROS environment you need to source the generated setup file:
 ```
 # source devel/setup.bash
 ```
-
-### Export proxy settings
+#### Export proxy settings
 ```
-export ROS_IP=<IP of docker1>
-export ROS_MASTER_URI="http://<IP of docker1>:11311"
+export ROS_IP=<IP of container-1>
+export ROS_MASTER_URI="http://<IP of container-2>:11311"
 ```
-
-### Run `aero_takeoff_land` example as below
+#### Run `aero_takeoff_land` example as below:
 ```
 # roslaunch aero_takeoff_land aero_takeoff_land.launch
 ```
-*Note: Press`TAB` key to auto complete the ROS commands.*
+*Note: Press`TAB` key to auto-complete the ROS commands.*
 
-# Running Other Examples : 
-## Fly mission
+#### Running Other Examples: 
+##### Fly mission
 
 **Before you run** `aero_fly_mission`:
 * Plan your missions in [QGC](http://qgroundcontrol.com) & save them to a file.
-Note: `aero_fly_mission` supports only QGC mission plan now.
+Note: `aero_fly_mission` supports only QGC mission plan.
 
 ![Qgc_plan](https://user-images.githubusercontent.com/25497245/33707210-b3366a44-db5c-11e7-9165-18c661f01907.png)
 
@@ -152,13 +129,17 @@ Running `aero_fly_mission` example
 # roslaunch aero_fly_mission aero_fly_mission.launch file:=<absolute path to QGC mission plan>
 ```
 
-# Creating debian package 
-Go into respective ros-pacakge and run below command
+## Creating debian package
+### Clone and Build ROS-examples first.
 ```
+$ git clone https://github.com/intel-aero/sample-apps
+$ cd ros
+$ catkin build
+$ source devel/setup.bash
+```
+Go to particular ROS-example pacakge (for.eg: `aero_takeoff_land`) and build.
+```
+$ roscd aero_takeoff_land
 $ make deb-pkg
 ```
-### Example:
- ```
-$ cd src/aero_takeoff_land/aero_takeoff_land
-$ make deb-pkg
- ```
+Debian package will be created in **sample-apps/src/debian-packages/** directory.
