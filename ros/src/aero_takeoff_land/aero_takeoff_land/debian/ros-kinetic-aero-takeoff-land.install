@@ -1,0 +1,4 @@
+
+obj-x86_64-linux-gnu/devel/lib/aero_takeoff_land /opt/ros/kinetic/lib
+launch /opt/ros/kinetic/share/aero_takeoff_land/
+

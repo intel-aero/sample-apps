@@ -1,0 +1,4 @@
+
+obj-x86_64-linux-gnu/devel/lib/aero_flight_modes /opt/ros/kinetic/lib
+launch /opt/ros/kinetic/share/aero_flight_modes/
+

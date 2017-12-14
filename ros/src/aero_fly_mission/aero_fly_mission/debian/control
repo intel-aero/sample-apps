@@ -1,0 +1,12 @@
+Source: ros-kinetic-aero-fly-mission
+Section: misc
+Priority: extra
+Maintainer: Shakthi Prashanth M <shakthi.prashanth.m@intel.com>
+Build-Depends: debhelper (>= 9.0.0), ros-kinetic-catkin, ros-kinetic-geometry-msgs, ros-kinetic-mavros-msgs, ros-kinetic-roscpp, ros-kinetic-sensor-msgs
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-kinetic-aero-fly-mission
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-kinetic-geometry-msgs, ros-kinetic-mavros-msgs, ros-kinetic-roscpp, ros-kinetic-sensor-msgs
+Description: Demonstration of Flying missions of Intel Aero using MAVROS.
