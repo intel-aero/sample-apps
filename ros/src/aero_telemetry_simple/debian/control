@@ -1,0 +1,12 @@
+Source: ros-kinetic-aero-telemetry-simple
+Section: misc
+Priority: extra
+Maintainer: Shakthi Prashanth M <shakthi.prashanth.m@intel.com>
+Build-Depends: debhelper (>= 9.0.0), ros-kinetic-catkin, ros-kinetic-geometry-msgs, ros-kinetic-mavros-msgs, ros-kinetic-roscpp, ros-kinetic-sensor-msgs, ros-kinetic-std-msgs
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-kinetic-aero-telemetry-simple
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-kinetic-geometry-msgs, ros-kinetic-mavros-msgs, ros-kinetic-roscpp, ros-kinetic-sensor-msgs, ros-kinetic-std-msgs
+Description: Demonstration of reading Telemetry info of Intel Aero Flight Controller using MAVROS bridge.

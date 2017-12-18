@@ -1,0 +1,12 @@
+Source: ros-kinetic-aero-takeoff-land
+Section: misc
+Priority: extra
+Maintainer: Shakthi Prashanth M <shakthi.prashanth.m@intel.com>
+Build-Depends: debhelper (>= 9.0.0), ros-kinetic-catkin, ros-kinetic-mavros-msgs, ros-kinetic-roscpp
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-kinetic-aero-takeoff-land
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-kinetic-mavros-msgs, ros-kinetic-roscpp
+Description: Demonstration of takeoff and land on Intel Aero using MAVROS bridge.
