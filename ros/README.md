@@ -143,3 +143,10 @@ $ roscd aero_takeoff_land
 $ make deb-pkg
 ```
 Debian package will be created in **sample-apps/src/debian-packages/** directory.
+
+## Validation of examples
+We have tested on SITL with below test setup:
+* PX4 SITL Gazebo multi-robot simulator, version 7.8.1
+* QGC v3.2.4
+* ROS Kinetic
+* MAVROS 0.21.3
