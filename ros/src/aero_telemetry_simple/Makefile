@@ -3,7 +3,7 @@ ROS_LIB_DIR=/opt/ros/kinetic/lib
 ROS_PKG_NAME=aero_telemetry_simple
 ROS_PKG_PATH=/opt/ros/kinetic/share
 DEB_PKG_NAME=ros-kinetic-aero-telemetry-simple
-VER=0.1.0
+VER=1.0.1
 DEB_PKG_PATH=$(INSTALL_DIR)/$(DEB_PKG_NAME)_$(VER)
 OBJ_DIR=obj-`arch`-linux-gnu
 
