@@ -1,0 +1,3 @@
+<launch>
+<node pkg="aero_offboard_velocity" name="aero_offboard_velocity" output="screen" type="node"/>
+</launch>
