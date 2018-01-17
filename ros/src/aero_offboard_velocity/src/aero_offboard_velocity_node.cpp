@@ -1,16 +1,16 @@
 /**
  * @file mavros_offboard_velocity_node.cpp
- * @brief Aero Offboard Velocity example node, written with mavros version 0.22.0, px4 flight
- * stack and tested in Gazebo SITL & jMAVSIM.
+ * @brief Aero Offboard Velocity example node, written with MAVROS version: 0.22.0, PX4 FW version: 1.7.3
+ * and tested in Gazebo SITL (7.9.0) & jMAVSIM.
  */
 
 #include <cstdlib>
 #include "aero_drone_offboard.h"
 
-void stepUp(AeroDrone &aero);
-void stepDown(AeroDrone &aero);
-bool offboardVelocityCtrlNED(AeroDrone &aero);
-bool offboardVelocityCtrlBody(AeroDrone &aero);
+bool offboardVelocityCtrlNED(AeroDrone& aero);
+bool offboardVelocityCtrlBody(AeroDrone& aero);
+void stepUp(AeroDrone& aero);
+void stepDown(AeroDrone& aero);
 
 int main(int argc, char** argv)
 {
@@ -44,14 +44,22 @@ int main(int argc, char** argv)
   is_success = offboardVelocityCtrlNED(aero);
   if (is_success)
   {
-    ROS_INFO("Completed Offboard Velocity Control with NED co-ordinates\n");
+    ROS_INFO("Offboard velocity control using NED: Done.\n");
+  }
+  else
+  {
+    ROS_ERROR("Offboard velocity control using NED: Failed.\n");
   }
 
   // Using body co-ordinates
   is_success = offboardVelocityCtrlBody(aero);
   if (is_success)
   {
-    ROS_INFO("Completed Offboard Velocity Control with Body co-ordinates ");
+    ROS_INFO("Offboard velocity control using Body: Done.\n");
+  }
+  else
+  {
+    ROS_ERROR("Offboard Velocity Control using Body: Failed.\n ");
   }
 
   // Land
@@ -68,89 +76,10 @@ end:
   return ret;
 }
 
-void stepUp(AeroDrone &aero)
-{
-  ROS_INFO("NED: Turn to face south");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 180.0f, 200);
-
-  ROS_INFO("NED: Move towards south");
-  aero.setOffboardVelocityNED(0.0f, -2.0f, 0.0f, 180.0f, 200);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Go up");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 2.0f, 180.0f, 100);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Move towards south");
-  aero.setOffboardVelocityNED(0.0f, -2.0f, 0.0f, 180.0f, 200);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Go up");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 2.0f, 180.0f, 100);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Move towards south");
-  aero.setOffboardVelocityNED(0.0f, -2.0f, 0.0f, 180.0f, 200);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 180.0f, 20);
-
-  ROS_INFO("NED: Go up");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 2.0f, 180.0f, 100);
-}
-
-void stepDown(AeroDrone &aero)
-{
-  ROS_INFO("NED: Turn north");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 360.0f, 200);
-
-  ROS_INFO("NED: Move towards north");
-  aero.setOffboardVelocityNED(0.0f, 2.0f, 0.0f, 360.0f, 300);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Go  down");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, -2.0f, 360.0f, 200);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Move towards north");
-  aero.setOffboardVelocityNED(0.0f, 2.0f, 0.0f, 360.0f, 300);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Go down ");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, -2.0f, 360.0f, 200);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Move towards north");
-  aero.setOffboardVelocityNED(0.0f, 2.0f, 0.0f, 360.0f, 300);
-
-  // Wait for a bit
-  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
-
-  ROS_INFO("NED: Go down");
-  aero.setOffboardVelocityNED(0.0f, 0.0f, -2.0f, 360.0f, 200);
-}
-
-bool offboardVelocityCtrlNED(AeroDrone &aero)
+bool offboardVelocityCtrlNED(AeroDrone& aero)
 {
   // Send once before starting offboard, otherwise it will be rejected.
   aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f);
-  ROS_INFO("Done with zero velocity set");
 
   if (aero.setOffboardMode())
     ROS_INFO("Offboard enabled");
@@ -175,13 +104,12 @@ bool offboardVelocityCtrlNED(AeroDrone &aero)
   return true;
 }
 
-bool offboardVelocityCtrlBody(AeroDrone &aero)
+bool offboardVelocityCtrlBody(AeroDrone& aero)
 {
-  ROS_INFO("Started body velocity ");
+  ROS_INFO("Started Body velocity");
 
   // Send it once before starting offboard, otherwise it will be rejected.
   aero.setOffboardVelocityBody(0.0f, 0.0f, 0.0f, 0.0f);
-  ROS_INFO("Done with zero velocity set");
 
   if (aero.setOffboardMode())
     ROS_INFO("Offboard enabled");
@@ -208,9 +136,86 @@ bool offboardVelocityCtrlBody(AeroDrone &aero)
 
   ROS_INFO("Body: Fly a circle sideways");
   aero.setOffboardVelocityBody(0.0f, 5.0f, 0.0f, -30.0f, 1000);
-
   ROS_INFO("body: Wait for a bit");
   aero.setOffboardVelocityBody(0.0f, 0.0f, 0.0f, 0.0f, 200);
 
   return true;
+}
+
+void stepUp(AeroDrone& aero)
+{
+  ROS_INFO("NED: Turn to face South");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 180.0f, 200);
+
+  ROS_INFO("NED: Move towards South");
+  aero.setOffboardVelocityNED(0.0f, -2.0f, 0.0f, 180.0f, 200);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Go Up");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 2.0f, 180.0f, 100);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Move towards South");
+  aero.setOffboardVelocityNED(0.0f, -2.0f, 0.0f, 180.0f, 200);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Go Up");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 2.0f, 180.0f, 100);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Move towards South");
+  aero.setOffboardVelocityNED(0.0f, -2.0f, 0.0f, 180.0f, 200);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 180.0f, 20);
+
+  ROS_INFO("NED: Go Up");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 2.0f, 180.0f, 100);
+}
+
+void stepDown(AeroDrone& aero)
+{
+  ROS_INFO("NED: Turn North");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 360.0f, 200);
+
+  ROS_INFO("NED: Move towards North");
+  aero.setOffboardVelocityNED(0.0f, 2.0f, 0.0f, 360.0f, 300);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Go Down");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, -2.0f, 360.0f, 200);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Move towards North");
+  aero.setOffboardVelocityNED(0.0f, 2.0f, 0.0f, 360.0f, 300);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Go Down ");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, -2.0f, 360.0f, 200);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Move towards North");
+  aero.setOffboardVelocityNED(0.0f, 2.0f, 0.0f, 360.0f, 300);
+
+  // Wait for a bit
+  aero.setOffboardVelocityNED(0.0f, 0.0f, 0.0f, 0.0f, 20);
+
+  ROS_INFO("NED: Go Down");
+  aero.setOffboardVelocityNED(0.0f, 0.0f, -2.0f, 360.0f, 200);
 }

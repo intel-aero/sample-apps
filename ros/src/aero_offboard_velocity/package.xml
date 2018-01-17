@@ -3,7 +3,7 @@
   
 <name>aero_offboard_velocity</name>
 <version>0.1.0</version>
-<description>Demonstration of offboard velocity in local NED and Body frame on intel aero using mavros bridge.</description>
+<description>Demonstration of offboard velocity in local NED and Body frame on Intel Aero using mavros bridge.</description>
 
 <maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>
 
