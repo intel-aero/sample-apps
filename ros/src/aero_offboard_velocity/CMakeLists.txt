@@ -25,7 +25,7 @@ include_directories(
 
 add_executable(${PROJECT_NAME}_node 
  src/aero_offboard_velocity_node.cpp
- src/aero_drone_action.cpp)
+ src/aero_drone_offboard.cpp)
 
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 

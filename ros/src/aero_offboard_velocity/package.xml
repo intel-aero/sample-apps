@@ -2,12 +2,12 @@
 <package>
   
 <name>aero_offboard_velocity</name>
-<version>0.0.0</version>
-<description>Demonstration of offboard velocity in local ned and body frame on intel aero using mavros bridge.</description>
+<version>0.1.0</version>
+<description>Demonstration of offboard velocity in local NED and Body frame on intel aero using mavros bridge.</description>
 
 <maintainer email="padmashree.mandri@intel.com">Padmashree Mandri</maintainer>
 
-<license>TODO</license>
+<license> BSD 3-Clause </license>
 <buildtool_depend>catkin</buildtool_depend>
 <build_depend>geometry_msgs</build_depend>
 <build_depend>roscpp</build_depend>

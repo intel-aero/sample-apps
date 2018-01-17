@@ -1,13 +1,8 @@
-#include "aero_drone_action.h"
+#include "aero_drone_offboard.h"
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/SetMode.h>
-#include <mavros_msgs/State.h>
-#include <geometry_msgs/PoseStamped.h>
 #include <mavros_msgs/PositionTarget.h>
-#include <unistd.h>
-#include <time.h>
-#include <ros/duration.h>
 
 AeroDrone::AeroDrone()
 {
@@ -133,8 +128,8 @@ float AeroDrone::toRadFromDeg(float deg)
 void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate)
 {
   mavros_msgs::PositionTarget pos{};
-  pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_BODY_NED;
 
+  pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_BODY_NED;
   pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | mavros_msgs::PositionTarget::IGNORE_PY |
                   mavros_msgs::PositionTarget::IGNORE_PZ | mavros_msgs::PositionTarget::IGNORE_AFX |
                   mavros_msgs::PositionTarget::IGNORE_AFY | mavros_msgs::PositionTarget::IGNORE_AFZ |
@@ -146,43 +141,36 @@ void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_
   set_vel_pub_.publish(pos);
 }
 
-void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, int count)
+void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, std::size_t count)
 {
   for (; count > 0; count--)
   {
-    AeroDrone::setOffboardVelocityBody(vx, vy, vz, yaw_rate);
+    setOffboardVelocityBody(vx, vy, vz, yaw_rate);
     ros::Duration(0.01).sleep();
   }
 }
 
-void AeroDrone::setOffboardVelocityNed(float vx, float vy, float vz, float yaw)
+void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw)
 {
-  mavros_msgs::PositionTarget pos;
-  pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_LOCAL_NED;
+  mavros_msgs::PositionTarget pos{};
 
+  pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_LOCAL_NED;
   pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | mavros_msgs::PositionTarget::IGNORE_PY |
                   mavros_msgs::PositionTarget::IGNORE_PZ | mavros_msgs::PositionTarget::IGNORE_AFX |
                   mavros_msgs::PositionTarget::IGNORE_AFY | mavros_msgs::PositionTarget::IGNORE_AFZ |
                   mavros_msgs::PositionTarget::FORCE | mavros_msgs::PositionTarget::IGNORE_YAW_RATE;
-  pos.position.x = 0.0f;
-  pos.position.y = 0.0f;
-  pos.position.z = 0.0f;
-  pos.acceleration_or_force.x = 0.0f;
-  pos.acceleration_or_force.y = 0.0f;
-  pos.acceleration_or_force.z = 0.0f;
   pos.velocity.x = vx;
   pos.velocity.y = vy;
   pos.velocity.z = vz;
   pos.yaw = toRadFromDeg(yaw);
-  pos.yaw_rate = 0.0f;
   set_vel_pub_.publish(pos);
 }
 
-void AeroDrone::setOffboardVelocityNed(float vx, float vy, float vz, float yaw, int count)
+void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw, std::size_t count)
 {
   for (; count > 0; count--)
   {
-    AeroDrone::setOffboardVelocityNed(vx, vy, vz, yaw);
+    setOffboardVelocityNED(vx, vy, vz, yaw);
     ros::Duration(0.01).sleep();
   }
 }

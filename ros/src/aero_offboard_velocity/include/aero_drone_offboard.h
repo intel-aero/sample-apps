@@ -1,12 +1,10 @@
 
 #pragma once
-#include <boost/bind.hpp>
-#include <boost/thread/thread.hpp>
+
 #include <ros/ros.h>
-#include <sensor_msgs/NavSatFix.h>
 #include <mavros_msgs/HomePosition.h>
-#include <std_msgs/Float64.h>
 #include <mavros_msgs/Altitude.h>
+
 class AeroDrone
 {
 public:
@@ -19,11 +17,11 @@ public:
   bool land();
   bool setOffboardMode();
 
-  // velocity
-  void setOffboardVelocityNed(float vx, float vy, float vz, float yaw);
-  void setOffboardVelocityNed(float vx, float vy, float vz, float yaw, int count);
+  // Offboard Velocity Control
+  void setOffboardVelocityNED(float vx, float vy, float vz, float yaw);
+  void setOffboardVelocityNED(float vx, float vy, float vz, float yaw, std::size_t count);
   void setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate);
-  void setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, int count);
+  void setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, std::size_t count);
 
 private:
   void getHomeGeoPoint();
@@ -31,6 +29,7 @@ private:
   void setHomeGeoPointCB(const mavros_msgs::HomePositionConstPtr& home);
   void getAltitudeCB(const mavros_msgs::AltitudeConstPtr& altitude);
   float toRadFromDeg(float deg);
+
   ros::NodeHandle nh_;
   mavros_msgs::HomePosition home_{};
   mavros_msgs::Altitude altitude_{};
@@ -40,6 +39,6 @@ private:
   ros::ServiceClient land_client_;
   bool home_set_ = false;
   bool altitude_received_ = false;
-  int altitude_in_amsl_;
+  float altitude_in_amsl_ = 0.0f;
   ros::Rate rate_ = ros::Rate(20.0);
 };
