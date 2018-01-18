@@ -122,7 +122,7 @@ void AeroDrone::getAltitudeCB(const mavros_msgs::AltitudeConstPtr& altitude)
 
 float AeroDrone::toRadFromDeg(float deg)
 {
-  return (float)(deg / 180.0f * M_PI);
+  return static_cast<float>(deg / 180.0f * M_PI);
 }
 
 void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate)
@@ -130,10 +130,14 @@ void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_
   mavros_msgs::PositionTarget pos{};
 
   pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_BODY_NED;
-  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | mavros_msgs::PositionTarget::IGNORE_PY |
-                  mavros_msgs::PositionTarget::IGNORE_PZ | mavros_msgs::PositionTarget::IGNORE_AFX |
-                  mavros_msgs::PositionTarget::IGNORE_AFY | mavros_msgs::PositionTarget::IGNORE_AFZ |
-                  mavros_msgs::PositionTarget::FORCE | mavros_msgs::PositionTarget::IGNORE_YAW;
+  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | 
+                  mavros_msgs::PositionTarget::IGNORE_PY |
+                  mavros_msgs::PositionTarget::IGNORE_PZ | 
+                  mavros_msgs::PositionTarget::IGNORE_AFX |
+                  mavros_msgs::PositionTarget::IGNORE_AFY | 
+                  mavros_msgs::PositionTarget::IGNORE_AFZ |
+                  mavros_msgs::PositionTarget::FORCE | 
+                  mavros_msgs::PositionTarget::IGNORE_YAW;
   pos.velocity.x = vx;
   pos.velocity.y = vy;
   pos.velocity.z = vz;
@@ -155,10 +159,14 @@ void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw)
   mavros_msgs::PositionTarget pos{};
 
   pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_LOCAL_NED;
-  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | mavros_msgs::PositionTarget::IGNORE_PY |
-                  mavros_msgs::PositionTarget::IGNORE_PZ | mavros_msgs::PositionTarget::IGNORE_AFX |
-                  mavros_msgs::PositionTarget::IGNORE_AFY | mavros_msgs::PositionTarget::IGNORE_AFZ |
-                  mavros_msgs::PositionTarget::FORCE | mavros_msgs::PositionTarget::IGNORE_YAW_RATE;
+  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | 
+                  mavros_msgs::PositionTarget::IGNORE_PY |
+                  mavros_msgs::PositionTarget::IGNORE_PZ | 
+                  mavros_msgs::PositionTarget::IGNORE_AFX |
+                  mavros_msgs::PositionTarget::IGNORE_AFY | 
+                  mavros_msgs::PositionTarget::IGNORE_AFZ |
+                  mavros_msgs::PositionTarget::FORCE | 
+                  mavros_msgs::PositionTarget::IGNORE_YAW_RATE;
   pos.velocity.x = vx;
   pos.velocity.y = vy;
   pos.velocity.z = vz;

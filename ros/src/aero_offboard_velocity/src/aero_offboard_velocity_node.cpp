@@ -1,5 +1,5 @@
 /**
- * @file mavros_offboard_velocity_node.cpp
+ * @file aero_offboard_velocity_node.cpp
  * @brief Aero Offboard Velocity example node, written with MAVROS version: 0.22.0, PX4 FW version: 1.7.3
  * and tested in Gazebo SITL (7.9.0) & jMAVSIM.
  */
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     ROS_ERROR("Offboard velocity control using NED: Failed.\n");
   }
 
-  // Using body co-ordinates
+  // Using Body co-ordinates
   is_success = offboardVelocityCtrlBody(aero);
   if (is_success)
   {
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
   }
   else
   {
-    ROS_ERROR("Offboard Velocity Control using Body: Failed.\n ");
+    ROS_ERROR("Offboard velocity control using Body: Failed.\n ");
   }
 
   // Land
