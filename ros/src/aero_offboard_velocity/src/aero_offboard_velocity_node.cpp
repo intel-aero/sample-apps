@@ -136,6 +136,7 @@ bool offboardVelocityCtrlBody(AeroDrone& aero)
 
   ROS_INFO("Body: Fly a circle sideways");
   aero.setOffboardVelocityBody(0.0f, 5.0f, 0.0f, -30.0f, 1000);
+
   ROS_INFO("body: Wait for a bit");
   aero.setOffboardVelocityBody(0.0f, 0.0f, 0.0f, 0.0f, 200);
 

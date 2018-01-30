@@ -72,9 +72,9 @@ bool AeroDrone::land()
 
 bool AeroDrone::setOffboardMode()
 {
-  mavros_msgs::SetMode offb_set_mode;
-  offb_set_mode.request.custom_mode = "OFFBOARD";
-  if (set_mode_client_.call(offb_set_mode) && offb_set_mode.response.mode_sent)
+  mavros_msgs::SetMode offboard_set_mode;
+  offboard_set_mode.request.custom_mode = "OFFBOARD";
+  if (set_mode_client_.call(offboard_set_mode) && offboard_set_mode.response.mode_sent)
     return true;
   else
     return false;
@@ -125,60 +125,44 @@ float AeroDrone::toRadFromDeg(float deg)
   return static_cast<float>(deg / 180.0f * M_PI);
 }
 
-void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate)
+void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, std::size_t count)
 {
   mavros_msgs::PositionTarget pos{};
 
   pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_BODY_NED;
-  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | 
-                  mavros_msgs::PositionTarget::IGNORE_PY |
-                  mavros_msgs::PositionTarget::IGNORE_PZ | 
-                  mavros_msgs::PositionTarget::IGNORE_AFX |
-                  mavros_msgs::PositionTarget::IGNORE_AFY | 
-                  mavros_msgs::PositionTarget::IGNORE_AFZ |
-                  mavros_msgs::PositionTarget::FORCE | 
-                  mavros_msgs::PositionTarget::IGNORE_YAW;
+  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | mavros_msgs::PositionTarget::IGNORE_PY |
+                  mavros_msgs::PositionTarget::IGNORE_PZ | mavros_msgs::PositionTarget::IGNORE_AFX |
+                  mavros_msgs::PositionTarget::IGNORE_AFY | mavros_msgs::PositionTarget::IGNORE_AFZ |
+                  mavros_msgs::PositionTarget::FORCE | mavros_msgs::PositionTarget::IGNORE_YAW;
   pos.velocity.x = vx;
   pos.velocity.y = vy;
   pos.velocity.z = vz;
   pos.yaw_rate = toRadFromDeg(yaw_rate);
-  set_vel_pub_.publish(pos);
-}
 
-void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, std::size_t count)
-{
   for (; count > 0; count--)
   {
-    setOffboardVelocityBody(vx, vy, vz, yaw_rate);
+    set_vel_pub_.publish(pos);
     ros::Duration(0.01).sleep();
   }
 }
 
-void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw)
+void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw, std::size_t count)
 {
   mavros_msgs::PositionTarget pos{};
 
   pos.coordinate_frame = mavros_msgs::PositionTarget::FRAME_LOCAL_NED;
-  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | 
-                  mavros_msgs::PositionTarget::IGNORE_PY |
-                  mavros_msgs::PositionTarget::IGNORE_PZ | 
-                  mavros_msgs::PositionTarget::IGNORE_AFX |
-                  mavros_msgs::PositionTarget::IGNORE_AFY | 
-                  mavros_msgs::PositionTarget::IGNORE_AFZ |
-                  mavros_msgs::PositionTarget::FORCE | 
-                  mavros_msgs::PositionTarget::IGNORE_YAW_RATE;
+  pos.type_mask = mavros_msgs::PositionTarget::IGNORE_PX | mavros_msgs::PositionTarget::IGNORE_PY |
+                  mavros_msgs::PositionTarget::IGNORE_PZ | mavros_msgs::PositionTarget::IGNORE_AFX |
+                  mavros_msgs::PositionTarget::IGNORE_AFY | mavros_msgs::PositionTarget::IGNORE_AFZ |
+                  mavros_msgs::PositionTarget::FORCE | mavros_msgs::PositionTarget::IGNORE_YAW_RATE;
   pos.velocity.x = vx;
   pos.velocity.y = vy;
   pos.velocity.z = vz;
   pos.yaw = toRadFromDeg(yaw);
-  set_vel_pub_.publish(pos);
-}
 
-void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw, std::size_t count)
-{
   for (; count > 0; count--)
   {
-    setOffboardVelocityNED(vx, vy, vz, yaw);
+    set_vel_pub_.publish(pos);
     ros::Duration(0.01).sleep();
   }
 }

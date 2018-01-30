@@ -18,10 +18,8 @@ public:
   bool setOffboardMode();
 
   // Offboard Velocity Control
-  void setOffboardVelocityNED(float vx, float vy, float vz, float yaw);
-  void setOffboardVelocityNED(float vx, float vy, float vz, float yaw, std::size_t count);
-  void setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate);
-  void setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, std::size_t count);
+  void setOffboardVelocityNED(float vx, float vy, float vz, float yaw, std::size_t count = 1);
+  void setOffboardVelocityBody(float vx, float vy, float vz, float yaw_rate, std::size_t count = 1);
 
 private:
   void getHomeGeoPoint();
