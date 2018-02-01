@@ -109,11 +109,10 @@ void AeroDrone::watchFlightModeThread()
 {
   auto state_sub =
       nh_.subscribe<mavros_msgs::State>("mavros/state", 1, boost::bind(&AeroDrone::printFlightModeCB, this, _1));
-  ros::Rate rate(1.0);
 
   while (ros::ok())
   {
     ros::spinOnce();
-    rate.sleep();
+    rate_.sleep();
   }
 }

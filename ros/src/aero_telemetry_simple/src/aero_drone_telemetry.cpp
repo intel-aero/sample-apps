@@ -35,11 +35,12 @@ void AeroDrone::fetchTelemetryThread()
   // Battery state
   auto battery_state_sub = nh_.subscribe<sensor_msgs::BatteryState>(
       "mavros/battery", 1, boost::bind(&AeroDrone::setBatteryStateCB, this, _1));
+  ros::Rate rate(10);
 
   while (ros::ok())
   {
     ros::spinOnce();
-    rate_.sleep();
+    rate.sleep();
   }
 }
 
