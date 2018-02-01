@@ -143,7 +143,6 @@ void AeroDrone::setOffboardVelocityBody(float vx, float vy, float vz, float yaw_
   {
     set_vel_pub_.publish(pos);
     rate_.sleep();
-    // ros::Duration(0.01).sleep();
   }
 }
 
@@ -165,6 +164,5 @@ void AeroDrone::setOffboardVelocityNED(float vx, float vy, float vz, float yaw, 
   {
     set_vel_pub_.publish(pos);
     rate_.sleep();
-    // ros::Duration(0.01).sleep();
   }
 }
