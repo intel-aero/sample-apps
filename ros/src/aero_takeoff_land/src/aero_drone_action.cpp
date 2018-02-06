@@ -116,11 +116,10 @@ void AeroDrone::watchAltitudeThread()
   auto relative_pos_sub =
       node->subscribe<std_msgs::Float64>("mavros/global_position/rel_alt", 1,
                                          boost::bind(&AeroDrone::getRelativeAltitudeCB, this, _1, &relative_altitude));
-  ros::Rate rate(1.0);
 
   while (ros::ok())
   {
     ros::spinOnce();
-    rate.sleep();
+    rate_.sleep();
   }
 }

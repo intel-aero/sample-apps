@@ -29,6 +29,6 @@ private:
   ros::NodeHandle nh_;
   mavros_msgs::HomePosition home_{};
   bool home_set_ = false;
-  ros::Rate rate_ = ros::Rate(20.0);
+  ros::Rate rate_ = ros::Rate(1.0);
   boost::thread* thread_watch_alt_ = nullptr;  // for watching drone's altitude
 };

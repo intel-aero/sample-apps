@@ -42,7 +42,6 @@ private:
   void fetchTelemetryThread();
 
   ros::NodeHandle nh_;
-  ros::Rate rate_ = ros::Rate(10.0);
 
   std::mutex mutex_{};
   boost::thread* thread_telemetry_ = nullptr;  // for watching drone's altitude
